@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thi Thử Tốt Nghiệp THPT - Môn Công Nghệ Nông Nghiệp</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for Statistics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header / Navbar -->
+    <header class="bg-emerald-700 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-emerald-600 rounded-lg">
+                    <i class="fa-solid fa-seedling text-2xl text-amber-300"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg md:text-xl leading-tight">ĐỀ THI THỬ tốt nghiệp thpt MÔN CÔNG NGHỆ</h1>
+                    <p class="text-xs text-emerald-200">Định hướng Nông nghiệp | Thời gian: 45 phút</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-4 bg-emerald-800/60 px-4 py-2 rounded-xl border border-emerald-500/30">
+                <div class="text-right">
+                    <div class="text-xs text-emerald-300 uppercase font-semibold">Thời gian còn lại</div>
+                    <div id="timer" class="text-xl font-mono font-bold text-amber-300">45:00</div>
+                </div>
+                <i class="fa-regular fa-clock text-2xl text-emerald-300"></i>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full grid grid-cols-1 lg:grid-cols-4 gap-6">
+        
+        <!-- Left Sidebar: Info, Control & Progress -->
+        <aside class="lg:col-span-1 space-y-6">
+            <!-- Student Information Card -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <h2 class="font-semibold text-slate-700 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-user-graduate text-emerald-600"></i> Thông Tin Thí Sinh
+                </h2>
+                <form id="student-form" class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-500 mb-1">Họ và tên <span class="text-red-500">*</span></label>
+                        <input type="text" id="student-name" required placeholder="Nguyễn Văn A" 
+                            class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-500 mb-1">Lớp / Trường <span class="text-red-500">*</span></label>
+                        <input type="text" id="student-class" required placeholder="12A1 - THPT Chuyên..." 
+                            class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                </form>
+            </div>
+
+            <!-- Quick Navigation Map -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-emerald-600"></i> Danh Sách Câu Hỏi
+                    </h2>
+                    <span id="answered-count" class="text-xs bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full font-medium">0/28 hoàn thành</span>
+                </div>
+                
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Phần I: Trắc nghiệm (24 câu)</p>
+                <div id="nav-part1" class="grid grid-cols-6 gap-1.5 mb-4">
+                    <!-- Dynamic Grid 1-24 -->
+                </div>
+
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Phần II: Đúng/Sai (4 câu)</p>
+                <div id="nav-part2" class="grid grid-cols-4 gap-1.5">
+                    <!-- Dynamic Grid 1-4 -->
+                </div>
+            </div>
+
+            <!-- Leaderboard & Statistics Toggle Modal -->
+            <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-2xl text-center space-y-2">
+                <p class="text-xs text-emerald-800 font-medium">Tổng hợp học sinh đã hoàn thành đề thi</p>
+                <button onclick="toggleLeaderboard()" class="w-full py-2 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-xl transition flex items-center justify-center gap-2 shadow-sm">
+                    <i class="fa-solid fa-trophy"></i> Xem Bảng Tổng Hợp
+                </button>
+            </div>
+        </aside>
+
+        <!-- Center/Right Content: Exam Questions -->
+        <section class="lg:col-span-3 space-y-6">
+            
+            <!-- Result Banner (Hidden initially) -->
+            <div id="result-banner" class="hidden bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-6 rounded-2xl shadow-md space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <span class="bg-emerald-800/50 text-emerald-200 text-xs px-3 py-1 rounded-full uppercase font-bold tracking-wider">Kết Quả Bài Thi</span>
+                        <h2 class="text-2xl font-extrabold mt-1" id="res-student-name">Thí Sinh: ---</h2>
+                        <p class="text-emerald-100 text-sm" id="res-student-class">Lớp: ---</p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/20 text-center">
+                        <div class="text-xs text-emerald-200 font-medium uppercase">Điểm Số Đạt Được</div>
+                        <div class="text-4xl font-black text-amber-300" id="res-score">0.0 / 10</div>
+                    </div>
+                </div>
+                <div class="pt-3 border-t border-emerald-500/40 text-xs flex flex-wrap gap-6 text-emerald-100">
+                    <div><i class="fa-regular fa-clock"></i> Thời gian: <span id="res-time" class="font-bold">--:--</span></div>
+                    <div><i class="fa-solid fa-check-double"></i> Số ý đúng Phần I: <span id="res-part1-correct" class="font-bold">0/24</span></div>
+                    <div><i class="fa-solid fa-list-ol"></i> Điểm Phần II: <span id="res-part2-score" class="font-bold">0.0 đ</span></div>
+                </div>
+            </div>
+
+            <!-- SECTION I HEADER -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between bg-emerald-50/50 border-l-4 border-l-emerald-600">
+                <div>
+                    <h2 class="font-bold text-slate-800 text-base">PHẦN I. Câu hỏi trắc nghiệm nhiều lựa chọn</h2>
+                    <p class="text-xs text-slate-500">Thí sinh trả lời từ câu 1 đến câu 24. Mỗi câu hỏi chọn duy nhất 01 phương án đúng (0.25đ/câu).</p>
+                </div>
+                <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full">24 Câu / 6.0 Điểm</span>
+            </div>
+
+            <!-- Part 1 Questions Container -->
+            <div id="part1-container" class="space-y-6">
+                <!-- Questions injected by JS -->
+            </div>
+
+            <!-- SECTION II HEADER -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between bg-emerald-50/50 border-l-4 border-l-teal-600 mt-8">
+                <div>
+                    <h2 class="font-bold text-slate-800 text-base">PHẦN II. Câu hỏi Trắc nghiệm Đúng/Sai</h2>
+                    <p class="text-xs text-slate-500">Thí sinh trả lời từ câu 1 đến câu 4. Trong mỗi ý a), b), c), d) lựa chọn Chọn ĐÚNG hoặc SAI.</p>
+                </div>
+                <span class="text-xs bg-teal-100 text-teal-800 font-bold px-3 py-1 rounded-full">4 Câu / 4.0 Điểm</span>
+            </div>
+
+            <!-- Part 2 Questions Container -->
+            <div id="part2-container" class="space-y-6">
+                <!-- Questions injected by JS -->
+            </div>
+
+            <!-- Bottom Action Buttons: Submit & Reset Side-by-Side -->
+            <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-200 flex flex-wrap items-center justify-between gap-4 sticky bottom-4 z-40">
+                <div class="text-xs text-slate-500">
+                    <i class="fa-solid fa-circle-info text-amber-500"></i> Bấm <b>NỘP BÀI</b> để chấm điểm hoặc <b>LÀM LẠI</b> để xóa hết đáp án.
+                </div>
+                <div class="flex items-center space-x-3 w-full sm:w-auto">
+                    <!-- Nút LÀM LẠI cạnh NỘP BÀI -->
+                    <button type="button" onclick="confirmReset()" class="flex-1 sm:flex-none px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-sm transition flex items-center justify-center gap-2 border border-slate-300">
+                        <i class="fa-solid fa-rotate-left"></i> LÀM LẠI
+                    </button>
+                    <!-- Nút NỘP BÀI -->
+                    <button type="button" id="btn-submit" onclick="submitExam()" class="flex-1 sm:flex-none px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-md shadow-emerald-200">
+                        <i class="fa-solid fa-paper-plane"></i> NỘP BÀI
+                    </button>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Modal: Bảng tổng hợp học sinh đã làm bài -->
+    <div id="leaderboard-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="bg-emerald-700 px-6 py-4 text-white flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-users-viewfinder text-amber-300 text-xl"></i>
+                    <h3 class="font-bold text-lg">Tổng Hợp Thí Sinh Tham Gia Làm Bài</h3>
+                </div>
+                <button onclick="toggleLeaderboard()" class="text-white/80 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto custom-scrollbar space-y-6">
+                <!-- Summary Stats Badge -->
+                <div class="grid grid-cols-3 gap-4 text-center">
+                    <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+                        <div class="text-xs text-emerald-600 font-medium uppercase">Tổng lượt thi</div>
+                        <div class="text-2xl font-bold text-emerald-800" id="stat-total-submissions">0</div>
+                    </div>
+                    <div class="bg-amber-50 p-3 rounded-xl border border-amber-100">
+                        <div class="text-xs text-amber-600 font-medium uppercase">Điểm trung bình</div>
+                        <div class="text-2xl font-bold text-amber-800" id="stat-avg-score">0.0</div>
+                    </div>
+                    <div class="bg-teal-50 p-3 rounded-xl border border-teal-100">
+                        <div class="text-xs text-teal-600 font-medium uppercase">Điểm cao nhất</div>
+                        <div class="text-2xl font-bold text-teal-800" id="stat-max-score">0.0</div>
+                    </div>
+                </div>
+
+                <!-- Table of Participants -->
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="font-semibold text-slate-700 text-sm">Danh Sách Học Sinh Nộp Bài</h4>
+                        <button onclick="clearLeaderboard()" class="text-xs text-red-500 hover:text-red-700 hover:underline">
+                            <i class="fa-regular fa-trash-can"></i> Xóa lịch sử
+                        </button>
+                    </div>
+                    <div class="border border-slate-200 rounded-xl overflow-hidden">
+                        <table class="w-full text-sm text-left text-slate-600">
+                            <thead class="text-xs text-slate-500 uppercase bg-slate-100 border-b border-slate-200">
+                                <tr>
+                                    <th class="px-4 py-3">STT</th>
+                                    <th class="px-4 py-3">Họ và tên</th>
+                                    <th class="px-4 py-3">Lớp / Trường</th>
+                                    <th class="px-4 py-3 text-center">Điểm số</th>
+                                    <th class="px-4 py-3 text-center">Thời gian làm</th>
+                                    <th class="px-4 py-3 text-right">Ngày nộp</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaderboard-tbody">
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-100 px-6 py-3 text-right border-t border-slate-200">
+                <button onclick="toggleLeaderboard()" class="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg">Thoát</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DATA STRUCTURE FOR EXAM QUESTIONS
+        const part1Questions = [
+            {
+                id: 1,
+                question: "Vì sao phải kiểm tra chất lượng nước định kỳ trong ao nuôi thủy sản?",
+                options: [
+                    "A. Để dự đoán thời tiết.",
+                    "B. Để bổ sung lượng nước trong ao.",
+                    "C. Để kịp thời phát hiện và xử lý những biến đổi bất lợi ảnh hưởng đến vật nuôi.",
+                    "D. Để định lượng thức ăn cần bổ sung cho cá."
+                ],
+                correct: 2, // C
+                explain: "Kiểm tra chất lượng nước định kỳ giúp phát hiện kịp thời các yếu tố môi trường biến đổi (pH, O2, khí độc NH3, H2S...) để xử lý, tránh gây sốc hoặc dịch bệnh cho thủy sản."
+            },
+            {
+                id: 2,
+                question: "Phát biểu nào đúng khi nói về vai trò của thủy sản đối với đời sống con người?",
+                options: [
+                    "A. Cung cấp nguyên liệu cho chế biến và xuất khẩu.",
+                    "B. Cung cấp nước tưới tiêu cho trồng trọt.",
+                    "C. Cung cấp thịt, cá, trứng, sữa cho các nhà máy chế biến.",
+                    "D. Cung cấp nguồn thực phẩm giàu protein cho con người."
+                ],
+                correct: 3, // D
+                explain: "Đối với đời sống con người, thủy sản là nguồn cung cấp thực phẩm giá trị dinh dưỡng cao, đặc biệt là nguồn protein dễ tiêu hóa."
+            },
+            {
+                id: 3,
+                question: "Một trong những biểu hiện khi cá thiếu oxygen là nổi đầu nhiều trên mặt nước. Người nuôi cá nên xử lý như thế nào?",
+                options: [
+                    "A. Trồng bổ sung các loại rong, tảo.",
+                    "B. Sử dụng hệ thống nâng nhiệt, chiếu đèn hoặc sục khí.",
+                    "C. Bổ sung oxygen bằng cách sục khí, quạt nước.",
+                    "D. Bổ sung oxygen bằng hoà tan H2O2 (oxy già) vào nước để phân huỷ thành O2."
+                ],
+                correct: 2, // C
+                explain: "Sục khí hoặc vận hành máy quạt nước là biện pháp an toàn, hiệu quả và phổ biến nhất để tăng lượng oxygen hòa tan cấp tốc cho ao nuôi."
+            },
+            {
+                id: 4,
+                question: "Động vật thủy sản nào sau đây thuộc nhóm động vật thân mềm?",
+                options: [
+                    "A. Tôm",
+                    "B. Cá trắm đen.",
+                    "C. Mực nang.",
+                    "D. Cá sấu."
+                ],
+                correct: 2, // C
+                explain: "Mực nang thuộc ngành Động vật thân mềm (Mollusca), lớp Chân đầu (Cephalopoda)."
+            },
+            {
+                id: 5,
+                question: "Nếu phát hiện người dân dùng kích điện để khai thác cá trong khu vực bảo tồn, em nên làm gì?",
+                options: [
+                    "A. Tranh luận trực tiếp với người vi phạm.",
+                    "B. Quay video để đăng lên mạng xã hội.",
+                    "C. Bỏ qua vì không liên quan đến mình.",
+                    "D. Báo cáo chính quyền và cơ quan chức năng địa phương."
+                ],
+                correct: 3, // D
+                explain: "Báo cáo cho cơ quan chức năng là hành động đúng pháp luật, đảm bảo an toàn cho bản thân và giúp xử lý vi phạm kịp thời."
+            },
+            {
+                id: 6,
+                question: "Mô hình chăn nuôi nào mà sử dụng robot vắt sữa bò tự động, khép kín hoàn toàn, sữa không tiếp xúc với không khí nên sữa được đảm bảo vệ sinh?",
+                options: [
+                    "A. Chăn nuôi theo tiêu chuẩn VietGAP.",
+                    "B. Chăn nuôi bán công nghiệp.",
+                    "C. Chăn nuôi công nghiệp.",
+                    "D. Chăn nuôi công nghệ cao."
+                ],
+                correct: 3, // D
+                explain: "Chăn nuôi công nghệ cao ứng dụng tự động hóa, robot và quy trình khép kín tiên tiến nhất."
+            },
+            {
+                id: 7,
+                question: "Tại sao trồng trọt công nghệ cao lại giúp nâng cao năng suất và chất lượng nông sản?",
+                options: [
+                    "A. Tăng lượng phân bón sử dụng trong sản xuất.",
+                    "B. Vì giảm chi phí và nhân công trong sản xuất.",
+                    "C. Vì chỉ sử dụng phân hóa học mà không dùng phân hữu cơ.",
+                    "D. Vì kiểm soát được môi trường và điều kiện sinh trưởng."
+                ],
+                correct: 3, // D
+                explain: "Công nghệ cao giúp chủ động kiểm soát ánh sáng, nhiệt độ, độ ẩm, dinh dưỡng... tối ưu cho sự phát triển của cây trồng."
+            },
+            {
+                id: 8,
+                question: "Thực trạng rừng nào dưới đây đang là vấn đề lo ngại ở nước ta hiện nay?",
+                options: [
+                    "A. Nạn cháy rừng, phá rừng và khai thác trái phép vẫn diễn ra.",
+                    "B. Đất rừng ngày càng giảm độ màu mỡ và khô cằn.",
+                    "C. Tỷ lệ che phủ rừng trồng tăng cao.",
+                    "D. Rừng đặc dụng đang phát triển nhanh."
+                ],
+                correct: 0, // A
+                explain: "Cháy rừng, chặt phá rừng và khai thác gỗ/lâm sản trái phép vẫn là thách thức lớn đối với bảo vệ tài nguyên rừng."
+            },
+            {
+                id: 9,
+                question: "Mục đích việc tiêm phòng cho vật nuôi là gì?",
+                options: [
+                    "A. Giúp vật nuôi tăng năng suất",
+                    "B. Tăng trọng lượng cho vật nuôi.",
+                    "C. Phòng ngừa bệnh truyền nhiễm.",
+                    "D. Làm vật nuôi dễ thuần hóa."
+                ],
+                correct: 2, // C
+                explain: "Tiêm vắc xin giúp vật nuôi chủ động tạo miễn dịch để phòng trừ các bệnh truyền nhiễm nguy hiểm."
+            },
+            {
+                id: 10,
+                question: "Những hoạt động nào dưới đây có vai trò bảo vệ tài nguyên rừng?\n(1) Phòng chống sâu, bệnh hại rừng.\n(2) Trồng cây xanh trong các nhà máy, xí nghiệp, khu công nghiệp, khu chế xuất.\n(3) Tuyên truyền, giáo dục ý thức, trách nhiệm của các tổ chức, cá nhân đối với việc chấp hành pháp luật về lâm nghiệp.\n(4) Xây dựng và bảo vệ các khu bảo tồn thiên nhiên.\n(5) Tăng cường chăn thả gia súc trong các khu rừng phòng hộ, rừng đầu nguồn.\n(6) Tăng cường việc khai thác rừng triệt để.",
+                options: [
+                    "A. (1), (2), (3), (5).",
+                    "B. (1), (2), (3), (4).",
+                    "C. (1), (2), (3), (6).",
+                    "D. (1), (2), (4), (6)."
+                ],
+                correct: 1, // B
+                explain: "Các ý (1), (2), (3), (4) đúng. Ý (5) chăn thả gia súc quá mức và (6) khai thác triệt để gây suy thoái rừng."
+            },
+            {
+                id: 11,
+                question: "Sản phẩm nào dưới đây được chế biến từ sản phẩm trồng trọt?",
+                options: [
+                    "A. Tinh bột sắn.",
+                    "B. Sữa chua.",
+                    "C. Ruốc thịt.",
+                    "D. Lông vũ."
+                ],
+                correct: 0, // A
+                explain: "Sắn (khoai mì) là cây trồng nông nghiệp; tinh bột sắn là sản phẩm chế biến từ trồng trọt."
+            },
+            {
+                id: 12,
+                question: "Loại cây nào dưới đây thuộc loại cây nông nghiệp hàng năm?",
+                options: [
+                    "A. Vải thiều.",
+                    "B. Cao su.",
+                    "C. Lạc.",
+                    "D. Cà phê."
+                ],
+                correct: 2, // C
+                explain: "Lạc (đậu phụng) là cây công nghiệp/nông nghiệp hàng năm (sinh trưởng và thu hoạch trong vòng 1 năm). Vải, cao su, cà phê là cây lâu năm."
+            },
+            {
+                id: 13,
+                question: "Nhận định nào dưới đây là đúng về quy luật sinh trưởng, phát triển của cây rừng?",
+                options: [
+                    "A. Cây rừng có khả năng ra hoa kết quả ngay trong giai đoạn non.",
+                    "B. Cây rừng ra hoa, kết quả đạt số lượng nhiều và chất lượng cao nhất ở giai đoạn gần thành thục.",
+                    "C. Sinh trưởng chậm lại, tán cây định hình năng suất và chất lượng ổn định, ra hoa đậu quả mạnh nhất ở giai đoạn thành thục.",
+                    "D. Cây rừng bắt đầu ra hoa kết quả là dấu hiệu giai đoạn thành thục của cây."
+                ],
+                correct: 2, // C
+                explain: "Ở giai đoạn thành thục, cây rừng đạt độ tăng trưởng ổn định nhất về sinh khối và ra hoa kết quả mạnh nhất."
+            },
+            {
+                id: 14,
+                question: "Khi độ pH nước ao nhỏ hơn 6, biện pháp xử lý phù hợp là gì?",
+                options: [
+                    "A. Thay toàn bộ nước trong ao.",
+                    "B. Thêm phân chuồng vào ao.",
+                    "C. Thả thêm thực vật thủy sinh trong ao.",
+                    "D. Bón vôi để nâng độ pH phù hợp."
+                ],
+                correct: 3, // D
+                explain: "Khi pH < 6 (nước bị chua/phèn), bón vôi (CaCO3 hoặc Ca(OH)2) giúp trung hòa axit và nâng pH nước ao về ngưỡng thích hợp (6.5 - 8.5)."
+            },
+            {
+                id: 15,
+                question: "Vì sao thức ăn thủy sản giữ vai trò quan trọng trong nuôi thủy sản?",
+                options: [
+                    "A. Giúp nước trong ao nuôi luôn sạch và vệ sinh.",
+                    "B. Cung cấp dinh dưỡng cho vật nuôi phát triển, ảnh hưởng trực tiếp đến năng suất và chất lượng của thủy sản.",
+                    "C. Giúp vật nuôi tăng sức đề kháng.",
+                    "D. Tăng khả năng sinh sản của thủy sản."
+                ],
+                correct: 1, // B
+                explain: "Thức ăn chiếm tới 60-70% chi phí nuôi, cung cấp toàn bộ năng lượng và dưỡng chất cho thủy sản sinh trưởng."
+            },
+            {
+                id: 16,
+                question: "Nhận định nào sau đây là đúng khi nói về “Phân loại các nhóm thuỷ sản”?",
+                options: [
+                    "A. Cá hồi vân, cá tầm, cá chép, cá quả, cá rô phi là nhóm sống ở vùng ôn đới nước lạnh.",
+                    "B. Dựa vào đặc điểm cấu tạo, có thể phân loại thuỷ sản thành 3 nhóm là nhóm cá, nhóm bò sát, nhóm nhuyễn thể.",
+                    "C. Những loài thuỷ sản ăn thức ăn là động vật, thực vật và mùn bã hữu cơ thuộc nhóm thuỷ sản ăn thịt.",
+                    "D. Thuỷ sản bản địa là những loài thuỷ sản có nguồn gốc và phân bố trong môi trường tự nhiên ở khu vực địa lí xác định."
+                ],
+                correct: 3, // D
+                explain: "Thủy sản bản địa là những loài có nguồn gốc phát sinh và phân bố tự nhiên lâu đời tại vùng địa lý đó."
+            },
+            {
+                id: 17,
+                question: "Nhiệm vụ hàng đầu trong công tác bảo vệ rừng là gì?",
+                options: [
+                    "A. Xây dựng đội ngũ quản lí rừng phù hợp.",
+                    "B. Khai thác gỗ hợp lý.",
+                    "C. Ngăn chặn cháy rừng và khai thác rừng trái phép.",
+                    "D. Tuyên truyền, bảo vệ động vật quý hiếm trong rừng."
+                ],
+                correct: 2, // C
+                explain: "Chống giặc lửa (cháy rừng) và chống lâm tặc (khai thác trái phép) là hai nhiệm vụ trọng tâm bảo vệ rừng khẩn cấp."
+            },
+            {
+                id: 18,
+                question: "Loại thức ăn nào sau đây thuộc nhóm thức ăn thô khô?",
+                options: [
+                    "A. Bột cá",
+                    "B. Cám gạo.",
+                    "C. Rơm.",
+                    "D. Cỏ voi."
+                ],
+                correct: 2, // C
+                explain: "Rơm lúa khô có hàm lượng xơ cao (>18%) và tỷ lệ nước thấp, thuộc nhóm thức ăn thô khô."
+            },
+            {
+                id: 19,
+                question: "Một ao nuôi cá có diện tích 1 ha. Thả cá rô phi mật độ 20.000 con/ha. Sau 6 tháng nuôi, tỷ lệ sống là 85%. Tính số lượng cá sống còn trong ao trong 6 tháng?",
+                options: [
+                    "A. 17.500 con.",
+                    "B. 17.000 con.",
+                    "C. 19.000 con.",
+                    "D. 17.200 con"
+                ],
+                correct: 1, // B
+                explain: "Số cá còn sống = 20.000 × 85% = 17.000 con."
+            },
+            {
+                id: 20,
+                question: "Phát biểu nào sai khi nói về xu hướng phát triển của thuỷ sản ở Việt Nam và trên thế giới?",
+                options: [
+                    "A. Áp dụng công nghệ cao để phát triển bền vững.",
+                    "B. Phát triển bền vững gắn với bảo vệ nguồn lợi thủy sản.",
+                    "C. Hướng tới nuôi trồng theo tiêu chuẩn VietGAP.",
+                    "D. Phát triển thủy sản bền vững cần giảm tỷ lệ nuôi, tăng tỷ lệ khai thác thủy sản."
+                ],
+                correct: 3, // D
+                explain: "Xu hướng hiện nay là GIẢM tỷ lệ khai thác tự nhiên để bảo vệ nguồn lợi và TĂNG tỷ lệ nuôi trồng thủy sản công nghệ cao."
+            },
+            {
+                id: 21,
+                question: "Vì sao phải chọn giống tốt trong nuôi thủy sản?",
+                options: [
+                    "A. Để rút ngắn thời gian nuôi và tăng hiệu quả kinh tế.",
+                    "B. Để giảm số lượng thủy sản trong ao nuôi.",
+                    "C. Để giảm chi phí đầu tư trong nuôi thủy sản.",
+                    "D. Để giảm số lượng nước trong ao nuôi."
+                ],
+                correct: 0, // A
+                explain: "Giống tốt có tốc độ tăng trưởng nhanh, kháng bệnh tốt giúp rút ngắn chu kỳ nuôi và mang lại lợi nhuận cao."
+            },
+            {
+                id: 22,
+                question: "Biện pháp nào sau đây không phải là kĩ thuật chăm sóc rừng sau khi trồng?",
+                options: [
+                    "A. Tỉa cành.",
+                    "B. Chặt phá rừng.",
+                    "C. Làm cỏ.",
+                    "D. Bón phân."
+                ],
+                correct: 1, // B
+                explain: "Chặt phá rừng là hành vi tàn phá, không phải biện pháp kỹ thuật chăm sóc."
+            },
+            {
+                id: 23,
+                question: "Thống kê diện tích ba loại rừng gồm rừng đặc dụng, rừng phòng hộ, rừng sản xuất ở nước ta giai đoạn 2007 - 2022, kết quả thu được như hình dưới đây. Anh (chị) hãy lựa chọn biện pháp để phát triển rừng bền vững?",
+                options: [
+                    "A. Tiếp tục duy trì tình trạng trồng rừng sản xuất như biểu đồ trên.",
+                    "B. Cần chú trọng trồng để tăng diện tích rừng đặc dụng và rừng phòng hộ.",
+                    "C. Không cần tăng cường trồng rừng đặc dụng vì tình trạng trồng rừng như giai đoạn 2007 - 2022 đã hợp lý.",
+                    "D. Chỉ cần chú trọng trồng rừng sản xuất để cung cấp lâm sản cho ngành công nghiệp chế biến gỗ."
+                ],
+                correct: 1, // B
+                hasChart: true,
+                explain: "Dựa vào biểu đồ, diện tích rừng đặc dụng (0.1 triệu ha) và phòng hộ (0.6-0.7 triệu ha) tăng rất chậm hoặc không tăng, trong khi rừng sản xuất tăng nhanh. Để bền vững cần tăng cường rừng đặc dụng & phòng hộ bảo vệ môi trường sinh thái."
+            },
+            {
+                id: 24,
+                question: "Vì sao nuôi thuỷ sản ven biển, hải đảo lại góp phần đảm bảo chủ quyền và an ninh Quốc gia?",
+                options: [
+                    "A. Vì người dân có thể nuôi trồng, đánh bắt thuỷ sản ngoài phạm vi lãnh thổ Quốc gia mình.",
+                    "B. Vì người dân chỉ được nuôi trồng, đánh bắt thủy sản trong phạm vi lãnh thổ của Quốc gia mình.",
+                    "C. Vì người dân không thể nuôi trồng, đánh bắt thuỷ sản trong phạm vi lãnh thổ Quốc gia mình.",
+                    "D. Vì người dân có thể nuôi trồng, đánh bắt thuỷ sản trong lẫn ngoài phạm vi lãnh thổ Quốc gia mình."
+                ],
+                correct: 1, // B
+                explain: "Sự có mặt và hoạt động kinh tế thủy sản hợp pháp của ngư dân trên các vùng biển đảo khẳng định và bảo vệ chủ quyền lãnh thổ quốc gia."
+            }
+        ];
+
+        const part2Questions = [
+            {
+                id: 1,
+                title: "Để cây rừng sinh trưởng phát triển tốt cần phải có biện pháp cơ bản.",
+                items: [
+                    { key: 'a', text: "a) Chọn giống phù hợp với từng vùng sinh thái ở từng địa phương.", correct: true, explain: "Đúng. Chọn đúng giống phù hợp với khí hậu, thổ nhưỡng giúp cây đạt tỷ lệ sống cao." },
+                    { key: 'b', text: "b) Trồng cây với mật độ càng dày càng tốt.", correct: false, explain: "Sai. Trồng quá dày làm cây cạnh tranh ánh sáng, dinh dưỡng, dễ sinh sâu bệnh." },
+                    { key: 'c', text: "c) Làm đất kỹ thuật trước khi trồng rừng.", correct: true, explain: "Đúng. Làm đất tơi xốp, đào hố đúng kích thước giúp rễ phát triển tốt." },
+                    { key: 'd', text: "d) Không cần chăm sóc sau khi trồng rừng.", correct: false, explain: "Sai. Rừng mới trồng rất cần chăm sóc (làm cỏ, xới đất, bón phân) trong 3-5 năm đầu." }
+                ]
+            },
+            {
+                id: 2,
+                title: "Vào buổi sáng mùa hè, Bác A đi kiểm tra ao nuôi cá Rô phi. Bác quan sát thấy có một số con cá bơi lờ đờ, bỏ ăn, lồi mắt, xuất huyết ở gốc vây. Bác A có một số nhận định và sẽ xử lý như sau:",
+                items: [
+                    { key: 'a', text: "a) Bệnh do liên cầu khuẩn Gram dương Streptococcus agalactiae gây ra.", correct: true, explain: "Đúng. Đây là các triệu chứng đặc trưng của bệnh xuất huyết, lồi mắt do vi khuẩn Streptococcus gây ra trên cá rô phi mùa nắng nóng." },
+                    { key: 'b', text: "b) Tỉ lệ chết của cá trong ao nuôi nhiễm bệnh có thể từ 30% - đến 70 %, có trường hợp 100% nếu không được phát hiện và điều trị kịp thời.", correct: true, explain: "Đúng. Bệnh liên cầu khuẩn diễn biến rất nhanh và tỷ lệ tử vong cực kỳ cao." },
+                    { key: 'c', text: "c) Cá chết do nhiễm bệnh không phải thu gom và xử lí theo quy định vì rất tốn kém.", correct: false, explain: "Sai. Cá chết phải vớt, thu gom và xử lý vôi/đốt/chôn lấp đúng kỹ thuật để tránh lây lan ô nhiễm." },
+                    { key: 'd', text: "d) Vào những thời điểm nắng nóng, cho cá ăn bổ sung các chất tăng sức đề kháng như Betaglucan, vitaminC, hạ nhiệt độ hệ thống nuôi, duy trì chất lượng nước phù hợp để giảm stress cho cá.", correct: true, explain: "Đúng. Đây là biện pháp phòng chữa bệnh tổng hợp giúp nâng cao miễn dịch cho cá." }
+                ]
+            },
+            {
+                id: 3,
+                title: "Lợi ích của nuôi thuỷ sản theo tiêu chuẩn VietGAP đối với cơ sở nuôi là:",
+                items: [
+                    { key: 'a', text: "a) Tăng chi phí sản xuất đầu tư trong nuôi trồng thủy sản.", correct: false, explain: "Sai. VietGAP giúp tối ưu hóa thức ăn, giảm rủi ro dịch bệnh nên làm giảm chi phí lâu dài." },
+                    { key: 'b', text: "b) Làm việc trong môi trường an toàn đảm bảo vệ sinh, nâng cao kĩ năng lao động.", correct: true, explain: "Đúng. VietGAP quy định nghiêm ngặt an toàn lao động và bảo hộ cho người nuôi." },
+                    { key: 'c', text: "c) Biết rõ nguồn gốc thực phẩm, công bằng trong việc lựa chọn thực phẩm an toàn.", correct: true, explain: "Đúng. Đảm bảo truy xuất nguồn gốc sản phẩm minh bạch." },
+                    { key: 'd', text: "d) Có nguồn nguyên liệu đảm bảo, giảm chi phí kiểm tra, có cơ hội xuất khẩu.", correct: true, explain: "Đúng. Chứng nhận VietGAP gia tăng uy tín và dễ dàng tiêu thụ tại thị trường lớn/xuất khẩu." }
+                ]
+            },
+            {
+                id: 4,
+                title: "Dưới đây là bảng yêu cầu về nhiệt độ nước nuôi của một số loài động vật thủy sản nuôi phổ biến:",
+                hasTable: true,
+                items: [
+                    { key: 'a', text: "a) Cá rô phi sinh trưởng phù hợp ở nhiệt độ từ 25°C đến 30°C.", correct: true, explain: "Đúng. Theo bảng 10.1, khoảng nhiệt độ thích hợp của cá rô phi là 25 - 30°C." },
+                    { key: 'b', text: "b) Cá tầm chịu lạnh tốt hơn tôm càng xanh.", correct: true, explain: "Đúng. Cá tầm có giới hạn nhiệt độ dưới là 5°C, tôm càng xanh là 22°C nên cá tầm chịu lạnh tốt hơn nhiều." },
+                    { key: 'c', text: "c) Nhiệt độ môi trường có ảnh hưởng trực tiếp đến các hoạt động sống quan trọng của động vật như hô hấp, tiêu hóa, sinh sản. Nguyên nhân là do hầu hết các loài động vật nuôi thủy sản là động vật hằng nhiệt.", correct: false, explain: "Sai. Thủy sản (cá, tôm, cua) là động vật BIẾN NHIỆT, không phải hằng nhiệt." },
+                    { key: 'd', text: "d) Các loài thủy sản đều yêu cầu nhiệt độ giống nhau.", correct: false, explain: "Sai. Mỗi loài thủy sản có khoảng nhiệt độ giới hạn và thích hợp khác nhau." }
+                ]
+            }
+        ];
+
+        // STATE MANAGEMENT
+        let userAnswersPart1 = {}; // { questionId: selectedIndex }
+        let userAnswersPart2 = {}; // { questionId: { 'a': true/false, ... } }
+        let examSubmitted = false;
+        let timerInterval = null;
+        let totalSeconds = 45 * 60;
+
+        window.onload = function() {
+            renderNavMap();
+            renderPart1();
+            renderPart2();
+            startTimer();
+            loadLeaderboardData();
+        };
+
+        // RENDER QUESTION NAVIGATION
+        function renderNavMap() {
+            const p1Nav = document.getElementById('nav-part1');
+            p1Nav.innerHTML = '';
+            part1Questions.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.id = `nav-p1-${q.id}`;
+                btn.className = "w-full aspect-square text-xs font-semibold rounded-lg bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200 flex items-center justify-center transition";
+                btn.innerText = q.id;
+                btn.onclick = () => scrollToElement(`q1-${q.id}`);
+                p1Nav.appendChild(btn);
+            });
+
+            const p2Nav = document.getElementById('nav-part2');
+            p2Nav.innerHTML = '';
+            part2Questions.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.id = `nav-p2-${q.id}`;
+                btn.className = "w-full py-2 text-xs font-semibold rounded-lg bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200 flex items-center justify-center transition";
+                btn.innerText = `Câu ${q.id}`;
+                btn.onclick = () => scrollToElement(`q2-${q.id}`);
+                p2Nav.appendChild(btn);
+            });
+        }
+
+        function scrollToElement(id) {
+            const el = document.getElementById(id);
+            if(el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function renderPart1() {
+            const container = document.getElementById('part1-container');
+            container.innerHTML = '';
+
+            part1Questions.forEach((q) => {
+                const card = document.createElement('div');
+                card.id = `q1-${q.id}`;
+                card.className = "bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4 transition hover:border-slate-300";
+
+                let chartHTML = '';
+                if(q.hasChart) {
+                    chartHTML = `
+                        <div class="my-4 p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                            <h4 class="text-xs font-bold text-center text-slate-600 mb-2">HÌNH 6.2: DIỆN TÍCH TRỒNG RỪNG Ở NƯỚC TA GIAI ĐOẠN 2007 - 2022 (Triệu ha)</h4>
+                            <div class="h-64 w-full relative">
+                                <canvas id="chart-rung-${q.id}"></canvas>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                let optionsHTML = q.options.map((opt, optIdx) => `
+                    <label class="flex items-start p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition text-sm space-x-3 opt-p1-${q.id}-${optIdx}">
+                        <input type="radio" name="p1-q${q.id}" value="${optIdx}" onchange="selectPart1(${q.id}, ${optIdx})" class="mt-0.5 text-emerald-600 focus:ring-emerald-500 h-4 w-4">
+                        <span class="text-slate-700 flex-1">${opt}</span>
+                    </label>
+                `).join('');
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="font-bold text-emerald-800 text-sm bg-emerald-100 px-3 py-1 rounded-lg shrink-0">Câu ${q.id}</div>
+                        <div class="text-sm font-semibold text-slate-800 flex-1 whitespace-pre-line">${q.question}</div>
+                    </div>
+                    ${chartHTML}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 pt-2">
+                        ${optionsHTML}
+                    </div>
+                    <div id="explain-p1-${q.id}" class="hidden p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-900 space-y-1">
+                        <div class="font-bold flex items-center gap-1 text-blue-700"><i class="fa-solid fa-lightbulb"></i> Giải thích đáp án:</div>
+                        <div>${q.explain}</div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+
+                // Init chart if applicable
+                if(q.hasChart) {
+                    setTimeout(() => initForestChart(`chart-rung-${q.id}`), 100);
+                }
+            });
+        }
+
+        function renderPart2() {
+            const container = document.getElementById('part2-container');
+            container.innerHTML = '';
+
+            part2Questions.forEach((q) => {
+                const card = document.createElement('div');
+                card.id = `q2-${q.id}`;
+                card.className = "bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4";
+
+                let tableHTML = '';
+                if(q.hasTable) {
+                    tableHTML = `
+                        <div class="my-3 overflow-x-auto border border-slate-200 rounded-xl">
+                            <table class="w-full text-xs text-center text-slate-700">
+                                <thead class="bg-slate-100 font-bold border-b border-slate-200">
+                                    <tr>
+                                        <th class="p-2.5 border-r">STT</th>
+                                        <th class="p-2.5 border-r">Loài thủy sản</th>
+                                        <th class="p-2.5 border-r">Khoảng nhiệt giới hạn (°C)</th>
+                                        <th class="p-2.5">Khoảng nhiệt độ thích hợp (°C)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200">
+                                    <tr><td class="p-2 border-r">1</td><td class="p-2 border-r font-medium">Cá rô phi</td><td class="p-2 border-r">10 – 39</td><td class="p-2">25 – 30</td></tr>
+                                    <tr><td class="p-2 border-r">2</td><td class="p-2 border-r font-medium">Cá chép</td><td class="p-2 border-r">4 – 35</td><td class="p-2">23 – 28</td></tr>
+                                    <tr><td class="p-2 border-r">3</td><td class="p-2 border-r font-medium">Cá tầm</td><td class="p-2 border-r">5 – 31</td><td class="p-2">18 – 25</td></tr>
+                                    <tr><td class="p-2 border-r">4</td><td class="p-2 border-r font-medium">Tôm càng xanh</td><td class="p-2 border-r">22 – 33</td><td class="p-2">28 – 30</td></tr>
+                                    <tr><td class="p-2 border-r">5</td><td class="p-2 border-r font-medium">Cua biển</td><td class="p-2 border-r">18 – 32</td><td class="p-2">25 – 29</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                }
+
+                let itemsHTML = q.items.map((item) => `
+                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                        <div class="flex flex-wrap items-center justify-between gap-3 text-sm">
+                            <span class="text-slate-700 font-medium flex-1">${item.text}</span>
+                            <div class="flex items-center space-x-3 shrink-0">
+                                <label class="inline-flex items-center space-x-1 cursor-pointer">
+                                    <input type="radio" name="p2-q${q.id}-${item.key}" value="true" onchange="selectPart2(${q.id}, '${item.key}', true)" class="text-emerald-600 focus:ring-emerald-500 h-4 w-4">
+                                    <span class="text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-1 rounded">ĐÚNG</span>
+                                </label>
+                                <label class="inline-flex items-center space-x-1 cursor-pointer">
+                                    <input type="radio" name="p2-q${q.id}-${item.key}" value="false" onchange="selectPart2(${q.id}, '${item.key}', false)" class="text-rose-600 focus:ring-rose-500 h-4 w-4">
+                                    <span class="text-xs font-bold text-rose-700 bg-rose-100 px-2 py-1 rounded">SAI</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div id="explain-p2-${q.id}-${item.key}" class="hidden p-2 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900">
+                            <b>Giải thích (${item.key}):</b> ${item.explain}
+                        </div>
+                    </div>
+                `).join('');
+
+                card.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <div class="font-bold text-teal-800 text-sm bg-teal-100 px-3 py-1 rounded-lg shrink-0">Câu ${q.id}</div>
+                        <div class="text-sm font-semibold text-slate-800">${q.title}</div>
+                    </div>
+                    ${tableHTML}
+                    <div class="space-y-2 pt-2">
+                        ${itemsHTML}
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // CHART rendering for Forest Area
+        function initForestChart(canvasId) {
+            const ctx = document.getElementById(canvasId);
+            if(!ctx) return;
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Tổng diện tích', 'Rừng Đặc dụng', 'Rừng Phòng hộ', 'Rừng Sản xuất'],
+                    datasets: [
+                        { label: '2007', data: [2.6, 0.1, 0.6, 1.9], backgroundColor: '#f97316' },
+                        { label: '2012', data: [3.2, 0.1, 0.6, 2.4], backgroundColor: '#eab308' },
+                        { label: '2017', data: [4.2, 0.1, 0.7, 2.9], backgroundColor: '#22c55e' },
+                        { label: '2022', data: [4.6, 0.1, 0.6, 3.9], backgroundColor: '#b45309' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Diện tích (Triệu ha)', font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        // SELECTION HANDLERS
+        function selectPart1(qId, optIdx) {
+            if(examSubmitted) return;
+            userAnswersPart1[qId] = optIdx;
+            
+            // Highlight nav button
+            const navBtn = document.getElementById(`nav-p1-${qId}`);
+            if(navBtn) {
+                navBtn.className = "w-full aspect-square text-xs font-bold rounded-lg bg-emerald-600 text-white shadow-sm flex items-center justify-center";
+            }
+            updateProgressCount();
+        }
+
+        function selectPart2(qId, itemKey, val) {
+            if(examSubmitted) return;
+            if(!userAnswersPart2[qId]) userAnswersPart2[qId] = {};
+            userAnswersPart2[qId][itemKey] = val;
+
+            // Check if all 4 items of this question are answered
+            const answeredKeys = Object.keys(userAnswersPart2[qId]);
+            const navBtn = document.getElementById(`nav-p2-${qId}`);
+            if(navBtn) {
+                if(answeredKeys.length === 4) {
+                    navBtn.className = "w-full py-2 text-xs font-bold rounded-lg bg-teal-600 text-white shadow-sm flex items-center justify-center";
+                } else {
+                    navBtn.className = "w-full py-2 text-xs font-semibold rounded-lg bg-teal-100 text-teal-800 border border-teal-300 flex items-center justify-center";
+                }
+            }
+            updateProgressCount();
+        }
+
+        function updateProgressCount() {
+            const p1Done = Object.keys(userAnswersPart1).length;
+            let p2Done = 0;
+            Object.keys(userAnswersPart2).forEach(k => {
+                if(Object.keys(userAnswersPart2[k]).length === 4) p2Done++;
+            });
+
+            const total = p1Done + p2Done;
+            document.getElementById('answered-count').innerText = `${total}/28 hoàn thành`;
+        }
+
+        // TIMER ENGINE
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if(totalSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Đã hết thời gian làm bài! Hệ thống sẽ tự động nộp bài.");
+                    submitExam();
+                    return;
+                }
+                totalSeconds--;
+                const mins = Math.floor(totalSeconds / 60);
+                const secs = totalSeconds % 60;
+                document.getElementById('timer').innerText = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }, 1000);
+        }
+
+        function submitExam() {
+            const nameInput = document.getElementById('student-name').value.trim();
+            const classInput = document.getElementById('student-class').value.trim();
+
+            if(!nameInput || !classInput) {
+                alert("Vui lòng điền đầy đủ Họ tên và Lớp/Trường ở góc trái trước khi nộp bài!");
+                document.getElementById('student-name').focus();
+                return;
+            }
+
+            if(examSubmitted) return;
+
+            clearInterval(timerInterval);
+            examSubmitted = true;
+
+            // DISABLE INPUTS
+            document.querySelectorAll('input[type="radio"]').forEach(inp => inp.disabled = true);
+            document.getElementById('student-name').disabled = true;
+            document.getElementById('student-class').disabled = true;
+            document.getElementById('btn-submit').classList.add('opacity-50', 'cursor-not-allowed');
+
+            // CALCULATE SCORE
+            let scorePart1 = 0;
+            let countPart1Correct = 0;
+
+            part1Questions.forEach(q => {
+                const userChoice = userAnswersPart1[q.id];
+                const explainBox = document.getElementById(`explain-p1-${q.id}`);
+                if(explainBox) explainBox.classList.remove('hidden');
+
+                q.options.forEach((_, optIdx) => {
+                    const label = document.querySelector(`.opt-p1-${q.id}-${optIdx}`);
+                    if(!label) return;
+
+                    if(optIdx === q.correct) {
+                        label.classList.add('bg-emerald-100', 'border-emerald-500', 'font-bold', 'text-emerald-900');
+                    }
+                    if(userChoice === optIdx && userChoice !== q.correct) {
+                        label.classList.add('bg-rose-100', 'border-rose-500', 'text-rose-900');
+                    }
+                });
+
+                if(userChoice === q.correct) {
+                    scorePart1 += 0.25;
+                    countPart1Correct++;
+                }
+            });
+
+            // PART 2 SCORING (Ministry standard: 1 item = 0.1, 2 items = 0.25, 3 items = 0.5, 4 items = 1.0)
+            let scorePart2 = 0;
+
+            part2Questions.forEach(q => {
+                let correctCount = 0;
+                const userAnsMap = userAnswersPart2[q.id] || {};
+
+                q.items.forEach(item => {
+                    const explainBox = document.getElementById(`explain-p2-${q.id}-${item.key}`);
+                    if(explainBox) explainBox.classList.remove('hidden');
+
+                    const isUserCorrect = userAnsMap[item.key] === item.correct;
+                    if(isUserCorrect) {
+                        correctCount++;
+                    }
+                });
+
+                // Standard Point Table for Part 2
+                if(correctCount === 1) scorePart2 += 0.1;
+                else if(correctCount === 2) scorePart2 += 0.25;
+                else if(correctCount === 3) scorePart2 += 0.5;
+                else if(correctCount === 4) scorePart2 += 1.0;
+            });
+
+            const totalFinalScore = Math.round((scorePart1 + scorePart2) * 100) / 100;
+            const timeSpentSecs = (45 * 60) - totalSeconds;
+            const timeSpentMins = Math.floor(timeSpentSecs / 60);
+            const timeSpentSecRem = timeSpentSecs % 60;
+            const timeFormatted = `${timeSpentMins} phút ${timeSpentSecRem} giây`;
+
+            // SHOW RESULT BANNER
+            document.getElementById('result-banner').classList.remove('hidden');
+            document.getElementById('res-student-name').innerText = `Thí Sinh: ${nameInput}`;
+            document.getElementById('res-student-class').innerText = `Lớp: ${classInput}`;
+            document.getElementById('res-score').innerText = `${totalFinalScore.toFixed(2)} / 10`;
+            document.getElementById('res-time').innerText = timeFormatted;
+            document.getElementById('res-part1-correct').innerText = `${countPart1Correct}/24 câu`;
+            document.getElementById('res-part2-score').innerText = `${scorePart2.toFixed(2)} đ`;
+
+            // SAVE TO LEADERBOARD / LOCALSTORAGE
+            saveSubmission({
+                name: nameInput,
+                className: classInput,
+                score: totalFinalScore,
+                time: timeFormatted,
+                timestamp: new Date().toLocaleString('vi-VN')
+            });
+
+            // Scroll to banner
+            document.getElementById('result-banner').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function confirmReset() {
+            if(confirm("Bạn có chắc chắn muốn LÀM LẠI bài thi từ đầu? Tất cả câu trả lời hiện tại sẽ bị xóa.")) {
+                resetExam();
+            }
+        }
+
+        function resetExam() {
+            // Reset state
+            userAnswersPart1 = {};
+            userAnswersPart2 = {};
+            examSubmitted = false;
+            totalSeconds = 45 * 60;
+
+            // Reset UI
+            document.getElementById('student-name').disabled = false;
+            document.getElementById('student-class').disabled = false;
+            document.getElementById('btn-submit').classList.remove('opacity-50', 'cursor-not-allowed');
+            document.getElementById('result-banner').classList.add('hidden');
+
+            // Re-render
+            renderNavMap();
+            renderPart1();
+            renderPart2();
+            updateProgressCount();
+
+            // Restart timer
+            clearInterval(timerInterval);
+            startTimer();
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function getSubmissions() {
+            try {
+                return JSON.parse(localStorage.getItem('cong_nghe_submissions') || '[]');
+            } catch(e) {
+                return [];
+            }
+        }
+
+        function saveSubmission(data) {
+            const list = getSubmissions();
+            list.unshift(data); // add new on top
+            localStorage.setItem('cong_nghe_submissions', JSON.stringify(list));
+            loadLeaderboardData();
+        }
+
+        function loadLeaderboardData() {
+            const list = getSubmissions();
+            const tbody = document.getElementById('leaderboard-tbody');
+            tbody.innerHTML = '';
+
+            document.getElementById('stat-total-submissions').innerText = list.length;
+
+            if(list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-slate-400">Chưa có học sinh nào nộp bài.</td></tr>`;
+                document.getElementById('stat-avg-score').innerText = "0.0";
+                document.getElementById('stat-max-score').innerText = "0.0";
+                return;
+            }
+
+            let totalScore = 0;
+            let maxScore = 0;
+
+            list.forEach((sub, idx) => {
+                totalScore += sub.score;
+                if(sub.score > maxScore) maxScore = sub.score;
+
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-slate-100 hover:bg-slate-50";
+                tr.innerHTML = `
+                    <td class="px-4 py-3 font-bold text-slate-400">${idx + 1}</td>
+                    <td class="px-4 py-3 font-semibold text-slate-800">${sub.name}</td>
+                    <td class="px-4 py-3 text-slate-600">${sub.className}</td>
+                    <td class="px-4 py-3 text-center font-bold text-emerald-600">${sub.score.toFixed(2)}</td>
+                    <td class="px-4 py-3 text-center text-xs text-slate-500">${sub.time}</td>
+                    <td class="px-4 py-3 text-right text-xs text-slate-400">${sub.timestamp}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('stat-avg-score').innerText = (totalScore / list.length).toFixed(1);
+            document.getElementById('stat-max-score').innerText = maxScore.toFixed(1);
+        }
+
+        function toggleLeaderboard() {
+            const modal = document.getElementById('leaderboard-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        function clearLeaderboard() {
+            if(confirm("Bạn có chắc chắn muốn xóa toàn bộ lịch sử học sinh làm bài?")) {
+                localStorage.removeItem('cong_nghe_submissions');
+                loadLeaderboardData();
+            }
+        }
+    </script>
+</body>
+</html>
